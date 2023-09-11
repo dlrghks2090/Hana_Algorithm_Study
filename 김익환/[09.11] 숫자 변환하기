@@ -1,0 +1,60 @@
+// 프로그래머스_LV2_BFS_숫자 변환하기
+
+/*
+    풀이>
+        처음에 dfs로 접근해서 시간초과가 발생했다.
+        문제에서 최소 연산 횟수를 구해야한다는것을 보고 bfs로 접금했다.
+        그러나 visit배열을 통한 방문체크를 진행하자 시스템 오류가 발생했다.
+        -> 로직은 맞는거 같은데 뭐가 visit을 크게 잡고 사용하는게 문제인가?
+        -> visit 배열을 통한 방쿤체크 대신 set을 이용해 방문체크 
+        -> 문제 해결
+        
+        -> 이러한 방문체크를 할 일이 있을때 ser을 사용하도록 하자.
+*/
+
+#include <string>
+#include <vector>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+int answer = -1;
+set<int> s;
+
+void bfs(int x, int y, int n) {
+    
+    queue<pair<int,int>> que;
+    
+    que.push({x,0});
+    
+    while(!que.empty()) {
+        int total = que.front().first;
+        int count = que.front().second;
+        que.pop();
+        
+        if (total == y) {
+            answer = count;
+            return;
+        }
+        else if (total < y) {
+            if (s.insert(total*3).second) {
+                que.push({total*3, count+1});
+            }
+            if (s.insert(total*2).second){
+                que.push({total*2, count+1});
+            }
+            if (s.insert(total+n).second) {
+                que.push({total+n, count+1});
+            }
+        }
+    }
+    
+}
+
+int solution(int x, int y, int n) {
+
+    bfs(x,y,n);
+
+    return answer;
+}
